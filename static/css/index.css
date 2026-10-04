@@ -1,0 +1,371 @@
+html, body {
+  font-family: 'Noto Sans', sans-serif;
+  color: #1f1f1f;
+  background: #ffffff;
+}
+
+.title, .subtitle, h1, h2, h3, h4 {
+  font-family: 'Castoro', 'Google Sans', serif;
+  letter-spacing: -0.01em;
+}
+
+.publication-title {
+  font-family: 'Castoro', serif;
+  font-weight: 600;
+  margin-bottom: 1.5rem !important;
+  line-height: 1.15;
+}
+
+.publication-authors {
+  margin-bottom: 0.4rem;
+}
+
+.publication-authors .author-block {
+  margin: 0 0.25rem;
+}
+
+.publication-authors a {
+  color: #1a63d8;
+  text-decoration: none;
+}
+
+.publication-authors a:hover {
+  text-decoration: underline;
+}
+
+.publication-links {
+  margin-top: 1.75rem;
+}
+
+.publication-links .link-block {
+  margin: 0 0.35rem;
+}
+
+.publication-links .button.is-dark {
+  background-color: #1f1f1f;
+  border-radius: 999px;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+.publication-links .button.is-dark:hover {
+  background-color: #000;
+}
+
+section.section {
+  padding: 3rem 1.5rem;
+}
+
+.tldr-section {
+  padding: 1.5rem 1.5rem 1.75rem;
+}
+
+.tldr {
+  text-align: left;
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: #2a2a2a;
+  margin: 0;
+}
+
+.hero.teaser {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.hero.teaser .hero-body {
+  padding-top: 0;
+}
+
+.hero.teaser .subtitle {
+  margin-top: 1.25rem;
+  font-size: 1.1rem;
+  color: #4a4a4a;
+  font-family: 'Noto Sans', sans-serif;
+  font-style: italic;
+}
+
+figure.image {
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+figure.image img {
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 240px;
+  border: 2px dashed #d0d0d0;
+  border-radius: 6px;
+  color: #888;
+  background: #fafafa;
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 0.95rem;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.placeholder code {
+  background: #eee;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  margin: 0 0.25rem;
+  color: #333;
+}
+
+.content h3.title.is-4 {
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+  color: #1f1f1f;
+}
+
+.content p {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: #2a2a2a;
+}
+
+.method-tabs {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1.5rem 0 2rem;
+}
+
+.method-tab {
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #1f1f1f;
+  background: #f2f3f5;
+  border: 1px solid #e2e4e8;
+  border-radius: 999px;
+  padding: 0.5rem 1.2rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.method-tab:hover {
+  background: #e6ecf7;
+  border-color: #c8d4ee;
+}
+
+.method-tab.is-active {
+  background: #1a63d8;
+  color: #ffffff;
+  border-color: #1a63d8;
+}
+
+.method-panel {
+  display: none;
+  animation: method-fade 0.2s ease-out;
+}
+
+.method-panel.is-active {
+  display: block;
+}
+
+.method-desc {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: #2a2a2a;
+  margin-top: 1.25rem;
+  text-align: justify;
+}
+
+@keyframes method-fade {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.results-block {
+  margin-bottom: 2.5rem;
+}
+
+.results-block h3.title.is-4 {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #1f1f1f;
+}
+
+.bibtex-wrapper {
+  position: relative;
+}
+
+.bibtex-wrapper pre {
+  background: #f6f6f6;
+  border-radius: 6px;
+  padding: 1.25rem 1.25rem 1.25rem 1.25rem;
+  font-size: 0.9rem;
+  overflow-x: auto;
+  border: 1px solid #ececec;
+}
+
+.bibtex-wrapper .copy-button {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  border-radius: 6px;
+}
+
+.footer {
+  background: #fafafa;
+  padding: 2rem 1.5rem;
+}
+
+.footer p {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.footer a {
+  color: #1a63d8;
+}
+
+@media screen and (max-width: 768px) {
+  .publication-title {
+    font-size: 1.8rem !important;
+  }
+  .publication-links .link-block {
+    display: inline-block;
+    margin: 0.25rem;
+  }
+}
+
+.synth-carousel {
+  position: relative;
+}
+
+.synth-viewport {
+  overflow: hidden;
+}
+
+.synth-track {
+  display: flex;
+  transition: transform 0.4s ease;
+}
+
+.results-block figure.synthesis-row {
+  flex: 0 0 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+.synthesis-frames {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 4px;
+}
+
+.synthesis-frames img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.synthesis-row figcaption {
+  text-align: center;
+  margin-top: 0.5rem;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.synth-arrow {
+  position: absolute;
+  top: calc(50% - 1.2rem);
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  color: #1a63d8;
+  font-size: 1.6rem;
+  line-height: 1;
+  padding: 0 0 3px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.synth-arrow:hover {
+  background: #1a63d8;
+  color: #fff;
+}
+
+.synth-prev { left: 8px; }
+.synth-next { right: 8px; }
+
+.synth-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 0.75rem;
+}
+
+.synth-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #cbd5e0;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  padding: 0;
+}
+
+.synth-dot.active {
+  background: #1a63d8;
+  width: 26px;
+  border-radius: 6px;
+}
+
+.synth-dot:hover {
+  background: #1a63d8;
+}
+
+@media (max-width: 600px) {
+  .synth-arrow {
+    width: 28px;
+    height: 28px;
+    font-size: 1.25rem;
+  }
+  .synth-prev { left: 4px; }
+  .synth-next { right: 4px; }
+}
+
+/* Blending row: Input A, frames, Input B in one grid. Each cell reserves a
+   label line so all images stay aligned; only the endpoints show text. */
+.synthesis-cell {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.synthesis-cell::before {
+  content: attr(data-label);
+  display: block;
+  min-height: 1.3em;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #6c757d;
+  text-align: center;
+  white-space: nowrap;
+  margin-bottom: 0.2rem;
+}
+
+/* Placeholder link button (e.g. "Code (coming soon)"): looks like the others, not clickable. */
+.button.is-static-soon {
+  cursor: default;
+  pointer-events: none;
+}

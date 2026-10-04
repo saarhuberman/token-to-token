@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description"
+        content="Token-to-Token Alignment of Text Embeddings for Semantic Blending — a training-free approach for meaningful semantic interpolation in text-to-image models.">
+  <meta name="keywords" content="Text-to-Image, Semantic Blending, Text Embeddings, Diffusion, Interpolation">
+  <title>Token-to-Token Alignment of Text Embeddings for Semantic Blending</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css?v=14">
+  <link rel="stylesheet" href="./static/css/interactive_slider.css?v=13">
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">
+            Token-to-Token Alignment of Text Embeddings for Semantic Blending
+          </h1>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://scholar.google.com/citations?user=yQ1S340AAAAJ&hl=en" target="_blank">Saar Huberman</a><sup>1,2</sup>&nbsp;
+            </span>
+            <span class="author-block">
+              <a href="https://rmokady.github.io/" target="_blank">Ron Mokady</a><sup>2</sup>&nbsp;
+            </span>
+            <span class="author-block">
+              <a href="https://orpatashnik.github.io/" target="_blank">Or Patashnik</a><sup>1</sup>&nbsp;
+            </span>
+            <span class="author-block">
+              <a href="https://danielcohenor.com/" target="_blank">Daniel Cohen-Or</a><sup>1</sup>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Tel Aviv University</span>&nbsp;
+            
+            <span class="author-block"><sup>2</sup>BRIA AI</span>
+          </div>
+
+          <br>
+          <div>
+            <h1 class="title">NeurIPS 2026 (Spotlight)</h1>
+          </div>
+          <br>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2606.24021" target="_blank"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="ai ai-arxiv"></i></span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <span class="external-link button is-normal is-rounded is-dark is-static-soon" aria-disabled="true">
+                  <span class="icon"><i class="fab fa-github"></i></span>
+                  <span>Code (coming soon)</span>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="interp-section">
+  <div id="interpolationGallery"></div>
+</section>
+
+<section class="tldr-section">
+  <div class="container is-max-desktop">
+    <p class="tldr">
+      <b>TL;DR:</b>
+      Modern text-to-image models are controlled through sequences of token embeddings —
+      representations of the semantics we want to manipulate.
+      While these spaces already encode rich, continuous semantic structure,
+      corresponding concepts are not necessarily aligned across prompts.
+      <b>Token-to-Token</b> establishes this correspondence,
+      making simple interpolation a meaningful semantic operation.
+    </p>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <figure class="image">
+        <img src="./static/images/teaser.png" alt="Teaser: semantic blending via token-to-token alignment"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="placeholder" style="display:none;">Teaser placeholder — upload <code>static/images/teaser.png</code></div>
+      </figure>
+      <h2 class="subtitle has-text-centered">
+        Aligning tokens across prompts unlocks meaningful semantic interpolation in text-to-image embedding space.
+      </h2>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Modern text-to-image models represent semantic content through sequences of token embeddings.
+            However, these representations are not unique: the same semantics can be expressed through different
+            token sequences, making direct <b>semantic operations</b> on them unreliable.
+            We argue that the key limitation is not the absence of semantic structure, but
+            <b>misalignment between representations</b>. To address this, we introduce
+            <b>Token-to-Token</b>, a pair-specific framework that establishes semantic correspondence
+            between two representations. Our method first aligns their semantic structure and then aligns their
+            token embeddings, producing compatible representations of corresponding concepts.
+            Once aligned, simple linear interpolation becomes a meaningful semantic operation, producing coherent
+            semantic trajectories. Our results suggest that text embedding spaces already encode a continuous
+            semantic structure that can be accessed by organizing existing representations, rather than modifying
+            the generative model.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Token-to-Token</h2>
+
+    <figure class="image">
+      <img src="./static/images/method_high_level.svg" alt="Method overview diagram">
+    </figure>
+    <p class="method-desc">
+      Token-to-Token establishes pair-specific semantic correspondence between two representations.
+      We first align their semantic structure at the textual level, then align their token embeddings to obtain
+      compatible representations of corresponding concepts. Once aligned, simple token-wise
+      interpolation produces intermediate semantic representations that condition the
+      generative model.
+    </p>
+
+    <div class="method-tabs" role="tablist" style="margin-top: 2.5rem;">
+      <button class="method-tab is-active" data-tab="stage1" role="tab">Stage 1 — Structural Alignment</button>
+      <button class="method-tab" data-tab="stage2" role="tab">Stage 2 — Embedding-Level Alignment</button>
+    </div>
+
+    <div class="method-panel is-active" data-panel="stage1">
+      <figure class="image">
+        <img src="./static/images/stractural_alignment.svg" alt="Structural alignment diagram">
+      </figure>
+      <p class="method-desc">
+        At the textual level, we jointly structure the two descriptions under a shared semantic
+        schema. Corresponding concepts are placed in consistent fields and expressed with aligned
+        phrasing, establishing coarse semantic correspondence before tokenization.
+      </p>
+    </div>
+
+    <div class="method-panel" data-panel="stage2">
+      <figure class="image">
+        <img src="./static/images/embedding_alignment.svg" alt="Embedding-level alignment diagram">
+      </figure>
+      <p class="method-desc">
+        At the embedding level, we align tokens representing corresponding concepts across the two
+        descriptions. Guided by Stage 1 and semantic similarity, we construct a projection matrix
+        that maps one representation into the token layout of the other, establishing token-wise
+        correspondence and making interpolation meaningful.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Results</h2>
+
+    <div class="results-block">
+      <h3 class="title is-4">Continuous Blending</h3>
+      <div class="synth-carousel">
+        <button class="synth-arrow synth-prev" aria-label="Previous sequence">&#8249;</button>
+        <div class="synth-viewport">
+          <div class="synth-track">
+            <figure class="synthesis-row">
+              <div class="synthesis-frames">
+                <div class="synthesis-cell" data-label="Input A"><img src="./static/images/interpolations_blend/library/image1.jpg" alt="Input A"></div>
+                <div class="synthesis-cell"><img src="./static/images/interpolations_blend/library/alpha_040.jpg" alt="Library blend, frame 1" loading="lazy"></div>
+                <div class="synthesis-cell"><img src="./static/images/interpolations_blend/library/alpha_050.jpg" alt="Library blend, frame 3" loading="lazy"></div>
+                <div class="synthesis-cell"><img src="./static/images/interpolations_blend/library/alpha_060.jpg" alt="Library blend, frame 4" loading="lazy"></div>
+                <div class="synthesis-cell"><img src="./static/images/interpolations_blend/library/alpha_070.jpg" alt="Library blend, frame 5" loading="lazy"></div>
+                <div class="synthesis-cell" data-label="Input B"><img src="./static/images/interpolations_blend/library/image2.jpg" alt="Input B"></div>
+              </div>
+            </figure>
+            <figure class="synthesis-row">
+              <div class="synthesis-frames">
+                <div class="synthesis-cell" data-label="Input A"><img src="./static/images/interpolations_blend/blend_surf/image_1.jpg" alt="Input A"></div>
+                <div class="synthesis-cell"><img src="./static/images/interpolations_blend/blend_surf/image_2.jpg" alt="Surf blend, frame 1" loading="lazy"></div>
+                <div class="synthesis-cell"><img src="./static/images/interpolations_blend/blend_surf/image_3.jpg" alt="Surf blend, frame 2" loading="lazy"></div>
+                <div class="synthesis-cell"><img src="./static/images/interpolations_blend/blend_surf/image_4.jpg" alt="Surf blend, frame 3" loading="lazy"></div>
+                <div class="synthesis-cell"><img src="./static/images/interpolations_blend/blend_surf/image_5.jpg" alt="Surf blend, frame 4" loading="lazy"></div>
+                <div class="synthesis-cell" data-label="Input B"><img src="./static/images/interpolations_blend/blend_surf/image_6.jpg" alt="Input B" loading="lazy"></div>
+              </div>
+            </figure>
+            <figure class="synthesis-row">
+              <div class="synthesis-frames">
+                <div class="synthesis-cell" data-label="Input A"><img src="./static/images/interpolations_blend/gymnastic/refernce/image1.jpg" alt="Input A" loading="lazy"></div>
+                <div class="synthesis-cell"><img src="./static/images/interpolations_blend/gymnastic/image2.jpg" alt="Gymnastics blend, frame 2" loading="lazy"></div>
+                <div class="synthesis-cell"><img src="./static/images/interpolations_blend/gymnastic/image3.jpg" alt="Gymnastics blend, frame 3" loading="lazy"></div>
+                <div class="synthesis-cell"><img src="./static/images/interpolations_blend/gymnastic/image4.jpg" alt="Gymnastics blend, frame 4" loading="lazy"></div>
+                <div class="synthesis-cell"><img src="./static/images/interpolations_blend/gymnastic/image5.jpg" alt="Gymnastics blend, frame 5" loading="lazy"></div>
+                <div class="synthesis-cell" data-label="Input B"><img src="./static/images/interpolations_blend/gymnastic/refernce/image2.jpg" alt="Input B" loading="lazy"></div>
+              </div>
+            </figure>
+          </div>
+        </div>
+        <button class="synth-arrow synth-next" aria-label="Next sequence">&#8250;</button>
+        <div class="synth-dots"></div>
+      </div>
+    </div>
+
+    <div class="results-block">
+      <h3 class="title is-4">Continuous Editing</h3>
+      <div class="synth-carousel">
+        <button class="synth-arrow synth-prev" aria-label="Previous sequence">&#8249;</button>
+        <div class="synth-viewport">
+          <div class="synth-track">
+            <figure class="synthesis-row">
+              <div class="synthesis-frames">
+                <div class="synthesis-cell" data-label="Input"><img src="./static/images/interpolations_edit/sprout_flower/alpha_00.jpg" alt="Input"></div>
+                <div class="synthesis-cell"><img src="./static/images/interpolations_edit/sprout_flower/alpha_01.jpg" alt="Grow the sprout into a flower, frame 2" loading="lazy"></div>
+                <div class="synthesis-cell"><img src="./static/images/interpolations_edit/sprout_flower/alpha_02.jpg" alt="Grow the sprout into a flower, frame 3" loading="lazy"></div>
+                <div class="synthesis-cell"><img src="./static/images/interpolations_edit/sprout_flower/alpha_03.jpg" alt="Grow the sprout into a flower, frame 4" loading="lazy"></div>
+                <div class="synthesis-cell"><img src="./static/images/interpolations_edit/sprout_flower/alpha_04.jpg" alt="Grow the sprout into a flower, frame 5" loading="lazy"></div>
+                <div class="synthesis-cell"><img src="./static/images/interpolations_edit/sprout_flower/alpha_05.jpg" alt="Grow the sprout into a flower, frame 6" loading="lazy"></div>
+              </div>
+              <figcaption>Grow the sprout into a flower</figcaption>
+            </figure>
+            <figure class="synthesis-row">
+              <div class="synthesis-frames">
+                <div class="synthesis-cell" data-label="Input"><img src="./static/images/interpolations_edit/breadbox/alpha_00.jpg" alt="Input"></div>
+                <div class="synthesis-cell"><img src="./static/images/interpolations_edit/breadbox/alpha_01.jpg" alt="Close the lid of the box, frame 2" loading="lazy"></div>
+                <div class="synthesis-cell"><img src="./static/images/interpolations_edit/breadbox/alpha_02.jpg" alt="Close the lid of the box, frame 3" loading="lazy"></div>
+                <div class="synthesis-cell"><img src="./static/images/interpolations_edit/breadbox/alpha_04.jpg" alt="Close the lid of the box, frame 4" loading="lazy"></div>
+                <div class="synthesis-cell"><img src="./static/images/interpolations_edit/breadbox/alpha_05.jpg" alt="Close the lid of the box, frame 5" loading="lazy"></div>
+                <div class="synthesis-cell"><img src="./static/images/interpolations_edit/breadbox/alpha_06.jpg" alt="Close the lid of the box, frame 6" loading="lazy"></div>
+              </div>
+              <figcaption>Close the lid of the box</figcaption>
+            </figure>
+            <figure class="synthesis-row">
+              <div class="synthesis-frames">
+                <div class="synthesis-cell" data-label="Input"><img src="./static/images/interpolations_edit/room_to_forest/alpha_00.jpg" alt="Input"></div>
+                <div class="synthesis-cell"><img src="./static/images/interpolations_edit/room_to_forest/alpha_01.jpg" alt="Turn the room into a forest, frame 2" loading="lazy"></div>
+                <div class="synthesis-cell"><img src="./static/images/interpolations_edit/room_to_forest/alpha_02.jpg" alt="Turn the room into a forest, frame 3" loading="lazy"></div>
+                <div class="synthesis-cell"><img src="./static/images/interpolations_edit/room_to_forest/alpha_03.jpg" alt="Turn the room into a forest, frame 4" loading="lazy"></div>
+                <div class="synthesis-cell"><img src="./static/images/interpolations_edit/room_to_forest/alpha_04.jpg" alt="Turn the room into a forest, frame 5" loading="lazy"></div>
+                <div class="synthesis-cell"><img src="./static/images/interpolations_edit/room_to_forest/alpha_05.jpg" alt="Turn the room into a forest, frame 6" loading="lazy"></div>
+              </div>
+              <figcaption>Turn the room into a forest</figcaption>
+            </figure>
+          </div>
+        </div>
+        <button class="synth-arrow synth-next" aria-label="Next sequence">&#8250;</button>
+        <div class="synth-dots"></div>
+      </div>
+    </div>
+
+    <div class="results-block">
+      <h3 class="title is-4">Continuous Synthesis</h3>
+      <div class="synth-carousel">
+        <button class="synth-arrow synth-prev" aria-label="Previous sequence">&#8249;</button>
+        <div class="synth-viewport">
+          <div class="synth-track">
+            <figure class="synthesis-row">
+              <div class="synthesis-frames">
+                <img src="./static/images/interpolations_synthesis/apple_to_stone/alpha_2.jpg" alt="Apple to Pumice stone, frame 1" loading="lazy">
+                <img src="./static/images/interpolations_synthesis/apple_to_stone/alpha_3.jpg" alt="Apple to Pumice stone, frame 2" loading="lazy">
+                <img src="./static/images/interpolations_synthesis/apple_to_stone/alpha_4.jpg" alt="Apple to Pumice stone, frame 3" loading="lazy">
+                <img src="./static/images/interpolations_synthesis/apple_to_stone/alpha_5.jpg" alt="Apple to Pumice stone, frame 4" loading="lazy">
+                <img src="./static/images/interpolations_synthesis/apple_to_stone/alpha_6.jpg" alt="Apple to Pumice stone, frame 5" loading="lazy">
+                <img src="./static/images/interpolations_synthesis/apple_to_stone/alpha_7.jpg" alt="Apple to Pumice stone, frame 6" loading="lazy">
+              </div>
+              <figcaption>&ldquo;Apple&rdquo; &rarr; &ldquo;Pumice stone&rdquo;</figcaption>
+            </figure>
+            <figure class="synthesis-row">
+              <div class="synthesis-frames">
+                <img src="./static/images/interpolations_synthesis/boy_old/alpha_1.jpg" alt="Teenager to Elderly man, frame 1" loading="lazy">
+                <img src="./static/images/interpolations_synthesis/boy_old/alpha_2.jpg" alt="Teenager to Elderly man, frame 2" loading="lazy">
+                <img src="./static/images/interpolations_synthesis/boy_old/alpha_3.jpg" alt="Teenager to Elderly man, frame 3" loading="lazy">
+                <img src="./static/images/interpolations_synthesis/boy_old/alpha_4.jpg" alt="Teenager to Elderly man, frame 4" loading="lazy">
+                <img src="./static/images/interpolations_synthesis/boy_old/alpha_5.jpg" alt="Teenager to Elderly man, frame 5" loading="lazy">
+                <img src="./static/images/interpolations_synthesis/boy_old/alpha_6.jpg" alt="Teenager to Elderly man, frame 6" loading="lazy">
+              </div>
+              <figcaption>&ldquo;Teenager&rdquo; &rarr; &ldquo;Elderly man&rdquo;</figcaption>
+            </figure>
+            <figure class="synthesis-row">
+              <div class="synthesis-frames">
+                <img src="./static/images/interpolations_synthesis/canal/alpha_2.jpg" alt="Alley to Canal with boats, frame 1" loading="lazy">
+                <img src="./static/images/interpolations_synthesis/canal/alpha_3.jpg" alt="Alley to Canal with boats, frame 2" loading="lazy">
+                <img src="./static/images/interpolations_synthesis/canal/alpha_4.jpg" alt="Alley to Canal with boats, frame 3" loading="lazy">
+                <img src="./static/images/interpolations_synthesis/canal/alpha_5.jpg" alt="Alley to Canal with boats, frame 4" loading="lazy">
+                <img src="./static/images/interpolations_synthesis/canal/alpha_6.jpg" alt="Alley to Canal with boats, frame 5" loading="lazy">
+                <img src="./static/images/interpolations_synthesis/canal/alpha_7.jpg" alt="Alley to Canal with boats, frame 6" loading="lazy">
+              </div>
+              <figcaption>&ldquo;Alley&rdquo; &rarr; &ldquo;Canal with boats&rdquo;</figcaption>
+            </figure>
+          </div>
+        </div>
+        <button class="synth-arrow synth-next" aria-label="Next sequence">&#8250;</button>
+        <div class="synth-dots"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title is-3 has-text-centered">BibTeX</h2>
+    <div class="bibtex-wrapper">
+      <button class="button is-small is-dark copy-button" onclick="copyBibtex()">
+        <span class="icon"><i class="fas fa-copy"></i></span>
+        <span id="copy-label">Copy</span>
+      </button>
+      <pre id="bibtex-block"><code>@article{huberman2026token,
+  title={Token-to-Token Alignment of Text Embeddings for Semantic Blending},
+  author={Huberman, Saar and Mokady, Ron and Patashnik, Or and Cohen-Or, Daniel},
+  journal={arXiv preprint arXiv:2606.24021},
+  year={2026}
+}</code></pre>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <p>
+        Website template adapted from
+        <a href="https://github.com/nerfies/nerfies.github.io" target="_blank">Nerfies</a> and the
+        <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a>.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<script src="./static/js/index.js?v=6"></script>
+<script src="./static/js/interactive_slider.js?v=35"></script>
+</body>
+</html>
